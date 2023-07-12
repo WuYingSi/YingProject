@@ -1,5 +1,7 @@
 package com.ying.util;
 
+import java.awt.*;
+
 /*
  * 游戏中的常量属性在这个类中
  * */
@@ -13,10 +15,17 @@ public class Constant {
     public static final int FRAME_WIDTH = 900;// 窗口宽度
     public static final int FRAME_HEIGHT = 700;// 窗口高度
 
-    // 窗口左上角坐标常量
-    //public static final int FRAME_X = 1920 - FRAME_WIDTH >> 1;
-    //public static final int FRAME_Y = 1080 - FRAME_HEIGHT >> 1;
+    //获取屏幕大小
+    static Toolkit kit = Toolkit.getDefaultToolkit();
+    //获取屏幕大小（int类型）
+    static Dimension screenSize = kit.getScreenSize();
+    //通过屏幕大小获取宽度和长度
+    static int screenw = screenSize.width;
+    static int screenh = screenSize.height;
 
+    // 窗口左上角坐标常量
+    public static final int FRAME_X = screenw - FRAME_WIDTH >> 1;
+    public static final int FRAME_Y = screenh - FRAME_HEIGHT >> 1;
     // 菜单常量
 
     // 菜单选项
@@ -34,5 +43,8 @@ public class Constant {
             "开发人员",
             "退出游戏",
     };
+
+    // 菜单选项的字体
+    public static final Font GAME_FONT =new Font("楷体",Font.BOLD,30);// 字体对象：属性有字体名，字体格式，字体大小
 
 }
