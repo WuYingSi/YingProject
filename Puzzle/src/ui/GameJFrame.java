@@ -2,11 +2,14 @@ package ui;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Random;
 
-public class GameJFrame extends JFrame implements KeyListener {
+public class GameJFrame extends JFrame implements KeyListener, ActionListener {
     // 继承接口KeyListener--键盘监听事件    监听整个游戏界面
     // GameJFrame 作为游戏主界面
 
@@ -29,6 +32,13 @@ public class GameJFrame extends JFrame implements KeyListener {
     };
     // 统计步数
     int step = 0;
+    // 创建选项下面的条目对象
+    // 选项1
+    JMenuItem rePlaceItem = new JMenuItem("重新游戏");
+    JMenuItem reLoginItem = new JMenuItem("重新登录");
+    JMenuItem closeItem = new JMenuItem("关闭游戏");
+    // 选项2
+    JMenuItem accountItem = new JMenuItem("开发人员");
 
     // 构造方法：设置游戏界面的属性等
     public GameJFrame() {
@@ -67,6 +77,12 @@ public class GameJFrame extends JFrame implements KeyListener {
                 x = i / 4;
                 y = i % 4;
             }
+            /*
+            不能使用else if
+            因为重新游戏的话
+            新打乱的一维数组中有0则会因为上面的if直接跳过
+            而没有赋值到新的二维数组中去，从而出现bug
+             */
             // i / 4 每列：第一列 1/4=0、2/4=0；到第二列时：5/4=1、6/4=1
             // 1 % 4 每行：第一行 1%4=1、2%4=2；到第二行时：5%4=1 ....
             data[i / 4][i % 4] = tempArr[i];
@@ -134,13 +150,6 @@ public class GameJFrame extends JFrame implements KeyListener {
         JMenu functionMenu = new JMenu("功能");
         JMenu aboutMenu = new JMenu("关于");
 
-        // 创建选项下面的条目对象
-        // 选项1
-        JMenuItem rePlaceItem = new JMenuItem("重新游戏");
-        JMenuItem reLoginItem = new JMenuItem("重新登录");
-        JMenuItem closeItem = new JMenuItem("关闭游戏");
-        // 选项2
-        JMenuItem accountItem = new JMenuItem("联系人");
 
         // 将条目对象添加到选项中
         functionMenu.add(rePlaceItem);
@@ -148,6 +157,12 @@ public class GameJFrame extends JFrame implements KeyListener {
         functionMenu.add(closeItem);
 
         aboutMenu.add(accountItem);
+
+        // 给对象绑定行为事件
+        rePlaceItem.addActionListener(this);
+        reLoginItem.addActionListener(this);
+        closeItem.addActionListener(this);
+        accountItem.addActionListener(this);
 
         // 将选项对象添加到菜单中
         jMenuBar.add(functionMenu);
@@ -295,5 +310,53 @@ public class GameJFrame extends JFrame implements KeyListener {
             }
         }
         return true;// 全部判断完输出胜利
+    }
+
+    // 绑定行为事件
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // 获取被点击的对象--e.getSource()
+        Object obj = e.getSource();
+        // 执行相应的事件
+        if (obj==rePlaceItem) {
+            System.out.println("重新游戏");
+            // 左上角步数清零
+            step=0;
+            // 打乱拼图顺序、重新绘制拼图
+            initData();
+            initImage();
+        }else if (obj==reLoginItem){
+            System.out.println("重新登录");
+            // 关闭游戏界面 重新开启登录界面
+            this.setVisible(false);
+            new LoginJFrame();
+        }else if (obj==closeItem){
+            System.out.println("关闭游戏");
+            // 关闭虚拟机
+            System.exit(0);
+        }else if (obj==accountItem){
+            System.out.println("开发人员");
+            // 创建一个弹窗
+            JDialog jDialog=new JDialog();
+            jDialog.setSize(250,250);
+            // 弹窗的内容
+            JLabel jLabel =new JLabel("小英著作");
+            jLabel.setHorizontalAlignment(jLabel.CENTER);// 文本内容垂直居中
+            // 设置文字样式大小
+            Font font=new Font("宋体", Font.BOLD,30);
+            jLabel.setFont(font);
+            // 内容放置弹窗中
+            jDialog.getContentPane().add(jLabel);
+            // 弹窗置顶、居中
+            jDialog.setAlwaysOnTop(true);
+            jDialog.setLocationRelativeTo(null);
+            // 弹窗处于最顶层不能操作其他界面
+            jDialog.setModal(true);
+            // 弹窗显示
+            jDialog.setVisible(true);
+
+
+
+        }
     }
 }
